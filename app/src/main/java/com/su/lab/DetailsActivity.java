@@ -45,18 +45,32 @@ public class DetailsActivity extends Activity implements LoaderManager.LoaderCal
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         cursor.moveToPosition(0);
+        //получаем номер телефона из cursor
         final String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+        //получаем ФИО
+        final String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
         /*
          * TODO #3 Добавить обработчик клика и добавить логику перехода в системное приложение телефона
          */
-//        TextView phoneNumber = findViewById(R.id.contacts_phone_number);
-//        phoneNumber.setText(number);
-//        phoneNumber.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // phone click logic
-//            }
-//        });
+        //создаем поле с ФИО
+        TextView contactsName = findViewById(R.id.contacts_name);
+        contactsName.setText(name);
+
+        //Создем поле с номером
+        TextView phoneNumber = findViewById(R.id.contacts_phone_number);    //
+        phoneNumber.setText(number);
+
+        //Когда кликаем по номеру открывается набор номера
+        phoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // phone click logic
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + number));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
